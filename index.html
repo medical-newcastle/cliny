@@ -13,6 +13,7 @@
  <div id='minimum'>
  <div id='query'><div id='query-content'>Loading...</div></div>
  <div id='answer'><div id='answer-content'></div></div>
+ <div id='feeder'><div id='answer-src' class='feeder-icon'>{}</div><div id='answer-source'></div></div>
  <div id='q-bar'>
    <div id='q-back'>&lsaquo;</div>
    <input id='' placeholder='?'></input>
@@ -55,13 +56,15 @@
      var s = c[i]
      if (s == '') { } else {
        var cat = s.match(/.*\%\%/)
-       var ref = s.match(/\$\+.*\$\$/)
+       var ref = s.match(/\$\+.*\$\$/) || []
        var A   = s.replace(cat,'').replace(ref,'').trim().split(/\n/)
        var Q   = []
        
        cat = cat[0].replace('%%','')
        cat = cat.split(',')
        cat.forEach(function(category,index) { cat[index] = category.trim() })
+       
+       if (ref[0]) { ref = ref[0].replace('$+','').replace('$$','').trim() }
        
        Q = A.shift()
        A.forEach(function(answer,index) { A[index] = answer.replace(/^- /,'') })
@@ -129,10 +132,11 @@
    MCQ = b[Math.floor(Math.random() * b.length)]
    $('#query-content').html(MCQ.Q)
    $('#answer').hide()
+   $('#answer-src').text('{}').hide()
+   $('#answer-source').text('').css('display','none')
    $('#query').show()
    $('#q-back').removeClass('useable') // .css('color','rgba(125,125,125,0.22)')
    $('#q-size').text(tdb.length)
-   if (MCQ.ref) { console.log( MCQ.ref ) }
  }
  
  function reply() {
@@ -140,6 +144,7 @@
    $('#answer-content').html(answers.join('<br>'))
    $('#query').hide()
    $('#answer').show()
+   $('#answer-src').show()
    $('#q-back').addClass('useable') // .css('color','rgba(125,125,125,1)')
  }
  
@@ -247,6 +252,18 @@
    $('#q-filter').css('display','none')
  }
  
+ function showSource() {
+   var ref = ''
+   if (typeof MCQ != 'undefined' && typeof MCQ.ref != 'undefined') { console.log(MCQ.ref); ref = MCQ.ref }
+   $('#answer-source').text(ref).css('display','block')
+   $('#answer-src').text('x')
+ }
+ 
+ function hideSource() {
+   $('#answer-source').text('').css('display','none')
+   $('#answer-src').text('{}')
+ }
+ 
  $('body').on('db-ready', function() {
    // console.log(db)
    // Update q-size
@@ -309,11 +326,17 @@
      var hidden = $('#q-filter').css('display')
      if (hidden == 'none') { showFilter() } else { hideFilter() }
    })
+   
+   $('#answer-src').on('click', function() {
+     var hidden = $('#answer-source').css('display')
+     if (hidden == 'none') { showSource() } else { hideSource() }
+   })
+   
  })
  
  clicks = 0
  timer  = null
  DELAY  = 210
-
+  
 </script>
 </html>
