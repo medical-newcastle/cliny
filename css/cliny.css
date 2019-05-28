@@ -134,8 +134,29 @@ br {
   transform        : translate( -50%, 0% );
 }
 
+#feeder {
+  position         : absolute;
+  bottom           : 13px;
+  left             : 7px;
+}
+
+.feeder-icon {
+  width            : 15px;
+  height           : 15px;
+}
+
+#answer-source {
+  display          : none;
+  position         : absolute;
+  top              : calc(-100% - 42px);
+  left             : 0px;
+  width            : 240px;
+  height           : 43px;
+  padding          : 0.4em;
+}
+
 /* Design */
-#q-util, #q-search li, #query-content, #answer-content, #answer, #q-filter li, #q-filter li .selector {
+#q-util, #q-search li, #query-content, #answer-content, #answer, #q-filter li, #q-filter li .selector, .feeder-icon {
   cursor           : pointer;
 }
 
@@ -173,6 +194,15 @@ input:focus {
   outline          : rgba( 145,  23,  23, 1.00 );
 }
 
+#answer-source {
+  transition       : all 140ms;
+  border           : 1px solid rgba(   1,   1,   1, 1.00 );
+  border-bottom    : none;
+  border-radius    : 5px;
+  border-bottom-left-radius : 0px;
+  border-bottom-right-radius: 0px;
+}
+
 /* Colours */
 #q-bar input {
   background-color : rgba(   1,   1,   1, 0.00 );
@@ -193,7 +223,7 @@ input:focus {
 }
 
 /* Fonts */
-#q-bar input, #q-back, #q-util, #q-search li div, #q-filter li {
+#q-bar input, #q-back, #q-util, #q-search li div, #q-filter li, .feeder-icon {
   font-family      : 'Quicksand';
 }
 
@@ -258,6 +288,23 @@ input:focus {
 #footer {
   font-family      : 'Oswald','Open Sans Condensed';
   font-size        :  10pt;
+  color            : rgba(  41,  41,  41, 0.55 );
+}
+
+.feeder-icon {
+  text-align       : center;
+  line-height      : 15px;
+  font-size        : 12pt;
+  color            : rgba(  41,  41,  41, 0.85 );
+}
+
+.feeder-icon:hover {
+  color            : rgba( 144, 144, 144, 0.85 );
+}
+
+#answer-source {
+  font-family      : 'Oswald','Open Sans Condensed';
+  font-size        : 10pt;
   color            : rgba(  41,  41,  41, 0.55 );
 }
 
