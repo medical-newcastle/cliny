@@ -43,12 +43,18 @@ hideFilter = function() {
 
 showSource = function() {
   var ref = ''
-  if (typeof MCQ != 'undefined' && typeof MCQ.ref != 'undefined') { console.log(MCQ.ref); ref = MCQ.ref }
+  if (typeof MCQ != 'undefined' && typeof MCQ.ref != 'undefined') { /*console.log(MCQ.ref);*/ ref = MCQ.ref }
   $('#answer-source').html(ref).css('display','block')
-  $('#answer-src').text('x')
+  $('#answer-src')
+    .text('x')
+    .css('border-top-right-radius','0%')
+    .css('border-top-left-radius', '0%')
 }
 
 hideSource = function() {
   $('#answer-source').text('').css('display','none')
-  $('#answer-src').text('{}')
+  $('#answer-src')
+    .text('{}')
+    .css('border-top-right-radius','50%')
+    .css('border-top-left-radius', '50%')
 }
