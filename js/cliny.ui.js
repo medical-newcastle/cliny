@@ -44,7 +44,7 @@ hideFilter = function() {
 showSource = function() {
   var ref = ''
   if (typeof MCQ != 'undefined' && typeof MCQ.ref != 'undefined') { console.log(MCQ.ref); ref = MCQ.ref }
-  $('#answer-source').text(ref).css('display','block')
+  $('#answer-source').html(ref).css('display','block')
   $('#answer-src').text('x')
 }
 
