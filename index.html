@@ -4,6 +4,9 @@
   <link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300|Oswald:300" rel="stylesheet">
   <link href="./css/cliny.css" rel="stylesheet">
   <script type='text/javascript' src='./js/utility.js'></script>
+  <script type='text/javascript' src='./js/cliny.main.js'></script>
+  <script type='text/javascript' src='./js/cliny.query.js'></script>
+  <script type='text/javascript' src='./js/cliny.ui.js'></script>
   <script
    src="https://code.jquery.com/jquery-3.3.1.min.js"
    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
@@ -26,15 +29,7 @@
  </div>
 </body>
 <script>
- // Fetch github
- var now = new Date().getTime()
- var db  = []
- var tdb = []
- var cats= []
- var MCQ = {}
- var url = 'https://api.github.com/repos/medical-newcastle/clinx/contents?time=' + now
  var p = $.when(1)
- 
  var m = $.ajax({url: url})
      m.done(function(e) {
       e.forEach(function(f, index) {
@@ -44,226 +39,11 @@
           parse(g)
         })
       })
-      
       p.then(function() {
         $('body').trigger('db-ready')
       })
      })
- 
- function parse(datum) {
-   var c = datum.split(/##/g)
-   for (var i = 0; i < c.length; i++) {
-     var s = c[i]
-     if (s == '') { } else {
-       var cat = s.match(/.*\%\%/)
-       var ref = s.match(/\$\+.*\$\$/) || []
-       var A   = s.replace(cat,'').replace(ref,'').trim().split(/\n/)
-       var Q   = []
-       
-       cat = cat[0].replace('%%','')
-       cat = cat.split(',')
-       cat.forEach(function(category,index) { cat[index] = category.trim() })
-       
-       if (ref[0]) { ref = ref[0].replace('$+','').replace('$$','').trim() }
-       
-       Q = A.shift()
-       A.forEach(function(answer,index) { A[index] = answer.replace(/^- /,'') })
-       // console.log(cat); console.log(Q); console.log(A)
-       var item = {Q: Q, A: A, cat: cat, ref: ref, uuid: uuid()}
-       db.push(item)
-     }
-   }
-   tdb = clone(db)
- }
- 
- function retrieve(id) {
-   for (var i = 0; i < db.length; i++) {
-     if (db[i].uuid == id) { return db[i] }
-   }
-   return null
- }
- 
- function karma() {
-   for (var key in qarm) {
-     if (qarm[key] == perms[key]) { // continue
-     } else {
-       return false
-     }
-   }
-   return true
- }
- 
- function posit(query) {
-   // Set up state-tracking
-   if (typeof qarm == 'undefined') { qarm = clone(perms) }
-   else {
-     if (karma()) { } else {
-       // console.log('Changed')
-       qarm = clone(perms)
-       // Build tdb
-       tdb = []
-       for (var i = 0; i < db.length; i++) {
-         var v = db[i]
-         for (var key in qarm) {
-           if (qarm[key] && v.cat.indexOf(key) != -1) {
-             tdb.push(v)
-             break
-           }
-         }
-       }
-       // console.log(tdb)
-     }
-   }
- 
-   var q = query || ''
-   // console.log(q)
-   var b = []
-   // subset
-   if (q == '') { b = tdb }
-   else if (retrieve(q) != null) {
-     b = [retrieve(q)]
-   } else {
-   for (var i = 0; i < db.length; i++) {
-     if (db[i].cat.indexOf(q) != -1) {
-     // console.log(db[i])
-       b.push(db[i])
-     }
-   } }
-   MCQ = b[Math.floor(Math.random() * b.length)]
-   $('#query-content').html(MCQ.Q)
-   $('#answer').hide()
-   $('#answer-src').text('{}').hide()
-   $('#answer-source').text('').css('display','none')
-   $('#query').show()
-   $('#q-back').removeClass('useable') // .css('color','rgba(125,125,125,0.22)')
-   $('#q-size').text(tdb.length)
- }
- 
- function reply() {
-   var answers = MCQ.A
-   $('#answer-content').html(answers.join('<br>'))
-   $('#query').hide()
-   $('#answer').show()
-   $('#answer-src').show()
-   $('#q-back').addClass('useable') // .css('color','rgba(125,125,125,1)')
- }
- 
- function reverse() {
-   $('#answer').hide()
-   $('#query').show()
-   $('#q-back').removeClass('useable') // ('color','rgba(125,125,125,0.22)')
- }
- 
- function categorise() {
-   cats  = {}
-   alls  = {}
-   perms = {}
-   for (var i = 0; i < db.length; i++) {
-     var t = db[i]
-     for (var j = 0; j < t.cat.length; j++) {
-       var key = t.cat[j]
-       alls[key] = alls[key] || []
-       alls[key].push(t.uuid)
-       if (j == 0) {
-        cats[key] = cats[key] || []
-        cats[key].push(t.uuid)
-        if (typeof perms[key] == 'undefined') { perms[key] = true }
-       }
-     }
-   }
- }
- 
- function focus() {
-   // evaluate the q-bar input
-   // construct the list
-   // display the list
-   var s = ''
-   var t = '<li><div onclick="QUERICAL">CONTENT</div></li>'
-   var Q = $('#q-bar input').val()
-   if (Q == '') {
-     for (var k in cats) {
-       var u = cats[k]
-           u = u[Math.floor(Math.random() * u.length)]
-       s += t.replace('CONTENT', k).replace('QUERICAL', 'posit(\'' + u + '\')')
-     }
-   } else {
-     var L = search(Q)
-         L = L.concat(interrogate(Q))
-         L = uniarr(L)
-     for (var i = 0; i < L.length; i++) {
-       L[i] = retrieve(L[i])
-       L[i].indexable = L[i].cat[0]
-     }
-     L.sort( chainsort([
-       sort_by('indexable', true, null),
-       sort_by('Q',         true, null),
-     ]) )
-     for (var i = 0; i < L.length; i++) {
-       s += t.replace('CONTENT', L[i].Q).replace('QUERICAL', 'posit(\'' + L[i].uuid + '\')')
-     }
-   }
-   $('#q-search').empty().append(s)
-   
- }
- 
- // Only pre-defined terms
- function search(term) {
-   term = term.toLowerCase()
-   var L = []
-   for (var k in alls) {
-     if (k.toLowerCase().match(term)) {
-       for (var i = 0; i < alls[k].length; i++) {
-         if (L.indexOf(alls[k][i]) == -1) { L.push(alls[k][i]) }
-       }
-     }
-   }
-   return L
- }
- 
- // Interrogates Q text
- function interrogate(term) {
-   term = term.toLowerCase()
-   var L = []
-   for (var i = 0; i < db.length; i++) {
-     var _ = db[i]
-     if (_.Q.toLowerCase().match(term)) {
-       if (L.indexOf(_.uuid) == -1) { L.push(_.uuid) }
-     }
-   }
-   return L
- }
- 
- function filterise() {
-   var template = '<li class="li-selector"><label class="switch"><input type="checkbox" checked="checked" data="DATUM"><span class="slider round"></span></label><div class="selector">CONTENT</div></li>'
-   var s = ''
-   for (var k in perms) {
-     s += template.replace('CONTENT', k).replace('DATUM', k)
-   }
-   $('#q-filter').empty().append(s)
- }
- 
- function showFilter() {
-   $('#q-util').empty().append('&rHar;')
-   $('#q-filter').css('display','block')
- }
- 
- function hideFilter() {
-   $('#q-util').empty().append('&dHar;')
-   $('#q-filter').css('display','none')
- }
- 
- function showSource() {
-   var ref = ''
-   if (typeof MCQ != 'undefined' && typeof MCQ.ref != 'undefined') { console.log(MCQ.ref); ref = MCQ.ref }
-   $('#answer-source').text(ref).css('display','block')
-   $('#answer-src').text('x')
- }
- 
- function hideSource() {
-   $('#answer-source').text('').css('display','none')
-   $('#answer-src').text('{}')
- }
- 
+
  $('body').on('db-ready', function() {
    // console.log(db)
    // Update q-size
@@ -331,12 +111,6 @@
      var hidden = $('#answer-source').css('display')
      if (hidden == 'none') { showSource() } else { hideSource() }
    })
-   
  })
- 
- clicks = 0
- timer  = null
- DELAY  = 210
-  
 </script>
 </html>
