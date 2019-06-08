@@ -8,7 +8,11 @@ focus = function() {
   var t = '<li><div onclick="QUERICAL">CONTENT</div></li>'
   var Q = $('#q-bar input').val()
   if (Q == '') {
-  
+    for (var key in cats) {
+      var u = cats[key]
+          u = u[Math.floor(Math.random() * u.length)]
+      s += t.replace('CONTENT', key).replace('QUERICAL', 'posit(\'' + u + '\')')
+    }
   } else {
     var L = search(Q)
         L = L.concat(interrogate(Q))

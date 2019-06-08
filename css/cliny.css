@@ -145,10 +145,15 @@ br {
   height           : 15px;
 }
 
+#answer-src {
+  width            : 28px;
+  height           : 28px;
+}
+
 #answer-source {
   display          : none;
   position         : absolute;
-  top              : calc(-100% - 42px);
+  top              : calc(-100% - 26px);
   left             : 0px;
   width            : 240px;
   height           : 43px;
@@ -160,7 +165,7 @@ br {
   cursor           : pointer;
 }
 
-#q-back, #q-util, #q-size, #query, #answer {
+#q-back, #q-util, #q-size, #query, #answer, #answer-src {
   user-select      : none;
 }
 
@@ -194,13 +199,19 @@ input:focus {
   outline          : rgba( 145,  23,  23, 1.00 );
 }
 
+#answer-src {
+  border-radius    : 50%;
+}
+
 #answer-source {
   transition       : all 140ms;
-  border           : 1px solid rgba(   1,   1,   1, 1.00 );
-  border-bottom    : none;
   border-radius    : 5px;
   border-bottom-left-radius : 0px;
-  border-bottom-right-radius: 0px;
+  overflow-y       : scroll;
+}
+
+#answer-source::-webkit-scrollbar { 
+  display: none; 
 }
 
 /* Colours */
@@ -220,6 +231,14 @@ input:focus {
 #q-filter {
   background-color : rgba(  10, 140, 240, 1.00 );
   background-image : url('../raster.png');
+}
+
+#answer-src, #answer-source  {
+  background-color : rgba( 201, 201, 201, 0.11 );
+}
+
+#answer-src:hover {
+  background-color : rgba( 155, 155, 155, 0.23 );
 }
 
 /* Fonts */
@@ -300,6 +319,10 @@ input:focus {
 
 .feeder-icon:hover {
   color            : rgba( 144, 144, 144, 0.85 );
+}
+
+#answer-src {
+  line-height      : 26px;
 }
 
 #answer-source {

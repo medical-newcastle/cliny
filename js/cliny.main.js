@@ -51,8 +51,8 @@ posit = function(query) {
   MCQ = b[Math.floor(Math.random() * b.length)]
   $('#query-content').html(MCQ.Q)
   $('#answer').hide()
-  $('#answer-src').text('{}').hide()
-  $('#answer-source').text('').css('display','none')
+  hideSource()
+  $('#answer-src').hide()
   $('#query').show()
   $('#q-back').removeClass('useable')
   $('#q-size').text(tdb.length)
