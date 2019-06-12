@@ -1,5 +1,6 @@
 
 body {
+  /* background-color : rgba( 135, 135, 135, 1); */
   background-color : rgba(  10, 140, 240, 1);
   background-image : url('../raster.png');
 }
@@ -65,7 +66,7 @@ body {
   position         : absolute;
   right            :   6px;
   top              : calc(34px + 7px);
-  width            :   47.5%;
+  width            :   53.5%;
   margin-block-start  : 0;
   margin-block-end    : 0;
   padding-inline-start: 4px;
@@ -102,7 +103,7 @@ body {
   position         : absolute;
   top              : calc(34px + 14px);
   width            : 315px;
-  height           : calc(100% - 34px - 14px);
+  height           : calc(100% - 34px - 14px - 37px);
 }
 
 #query-content {
@@ -129,14 +130,54 @@ br {
 
 #footer {
   position         : absolute;
+  bottom           : 0px;
+  left             : 50%;
+  width            : 315px;
+  height           : 37px;
+  transform        : translate( -50%, 0% );
+}
+
+#footer-extension {
+  position         : absolute;
+  bottom           : 0px;
+  left             : 0px;
+  width            : 100%;
+  height           : 37px;
+}
+
+#contribute {
+  position         : absolute;
   bottom           : 3px;
   left             : 50%;
   transform        : translate( -50%, 0% );
 }
 
+#copy {
+  position         : absolute;
+  top              : 0px;
+  right            : 7px;
+  width            : 28px;
+  height           : 28px;
+}
+
+#copy-icon {
+  position         : absolute;
+  left             : 50%;
+  top              : 50%;
+  transform        : translate( -45%, -57% );
+}
+
+#clear {
+  position         : absolute;
+  top              : 0px;
+  right            : calc(7px + 28px + 7px);
+  width            : 28px;
+  height           : 28px;
+}
+
 #feeder {
   position         : absolute;
-  bottom           : 13px;
+  top              : 0px;
   left             : 7px;
 }
 
@@ -155,17 +196,37 @@ br {
   position         : absolute;
   top              : calc(-100% - 26px);
   left             : 0px;
-  width            : 240px;
+  width            : calc(315px - 7px - 7px - 0.8em);
   height           : 43px;
   padding          : 0.4em;
 }
 
+#copied {
+  position         : absolute;
+  top              : -21px;
+  right            : calc(7px + 4px);
+}
+
+#error {
+  position         : absolute;
+  left             : 50%;
+  top              : 50%;
+  transform        : translate( -50%, -50% );
+}
+
+#download-notice {
+  position         : absolute;
+  top              : 0px;
+  left             : 50%;
+  transform        : translate( -50%, 0% );
+}
+
 /* Design */
-#q-util, #q-search li, #query-content, #answer-content, #answer, #q-filter li, #q-filter li .selector, .feeder-icon {
+#q-util, #q-search li, #query-content, #answer-content, #answer, #q-filter li, #q-filter li .selector, .feeder-icon, #copy, #clear {
   cursor           : pointer;
 }
 
-#q-back, #q-util, #q-size, #query, #answer, #answer-src {
+#q-back, #q-util, #q-size, #query, #answer, #answer-src, #contribute, #copy-icon {
   user-select      : none;
 }
 
@@ -200,18 +261,44 @@ input:focus {
 }
 
 #answer-src {
-  border-radius    : 50%;
+  border-bottom-left-radius  : 30%;
+  border-bottom-right-radius : 30%;
 }
 
 #answer-source {
   transition       : all 140ms;
   border-radius    : 5px;
   border-bottom-left-radius : 0px;
+  border-bottom-right-radius: 0px;
+  border-bottom    : 0px;
   overflow-y       : scroll;
 }
 
 #answer-source::-webkit-scrollbar { 
   display: none; 
+}
+
+#footer, #footer-extension {
+  border-top-left-radius    : 5px;
+  border-top-right-radius   : 5px;
+}
+
+#copy {
+  border-bottom-left-radius  : 30%;
+  border-bottom-right-radius : 30%;
+}
+
+#hidden-input {
+  position: absolute;
+  left: -999em;
+}
+
+#copied {
+  opacity   : 0;
+}
+
+#clear {
+  text-align : center;
 }
 
 /* Colours */
@@ -221,11 +308,13 @@ input:focus {
 }
 
 #q-search li {
-  background       : rgba( 145, 145, 188, 0.67 );
+  /* background       : rgba( 145, 145, 188, 0.67 ); */
+  background-color : rgba(  10, 140, 240, 0.80 );
 }
 
 #q-search li div:hover {
-  background       : rgba(  10, 100, 255, 0.88 );
+  /* background       : rgba(  10, 100, 255, 0.88 ); */
+  background-color : rgba(  10, 140, 240, 1.00 );
 }
 
 #q-filter {
@@ -233,16 +322,36 @@ input:focus {
   background-image : url('../raster.png');
 }
 
-#answer-src, #answer-source  {
+#answer-src {
+  background-color : rgba(  55,  55,  55, 0.06 );
+}
+
+#answer-source  {
   background-color : rgba( 201, 201, 201, 0.11 );
 }
 
 #answer-src:hover {
-  background-color : rgba( 155, 155, 155, 0.23 );
+  background-color : rgba(  55,  55,  55, 0.13 );
+}
+
+#answer-src.shown:hover {
+  background-color : rgba(  55,  55,  55, 0.23 );
+}
+
+#footer {
+  background-color : rgba( 255, 255, 255, 0.03 );
+}
+
+#footer-extension {
+  background-color : rgba( 255, 255, 255, 0.09 );
+}
+
+#copy, #clear {
+  background-color : rgba( 123, 123, 123, 0.11 );
 }
 
 /* Fonts */
-#q-bar input, #q-back, #q-util, #q-search li div, #q-filter li, .feeder-icon {
+#q-bar input, #q-back, #q-util, #q-search li div, #q-filter li, .feeder-icon, #error {
   font-family      : 'Quicksand';
 }
 
@@ -329,6 +438,28 @@ input:focus {
   font-family      : 'Oswald','Open Sans Condensed';
   font-size        : 10pt;
   color            : rgba(  41,  41,  41, 0.55 );
+}
+
+#copy:hover #copy-icon {
+  color            : rgba( 144, 144, 144, 0.85 );
+}
+
+#copied {
+  color            : rgba(   1,   1,   1, 0.89 );
+}
+
+#clear {
+  font-size        : 12pt;
+}
+
+#clear:hover {
+  color            : rgba( 144, 144, 144, 0.85 );
+}
+
+#download-notice {
+  font-family      : 'Oswald';
+  font-size        : 8pt;
+  color            : rgba(   1,   1,   1, 0.67) ;
 }
 
 /* The switch - the box around the slider */
