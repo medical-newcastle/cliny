@@ -7,16 +7,21 @@
   <script type='text/javascript' src='./js/cliny.main.js'></script>
   <script type='text/javascript' src='./js/cliny.query.js'></script>
   <script type='text/javascript' src='./js/cliny.ui.js'></script>
-  <script
-   src="https://code.jquery.com/jquery-3.3.1.min.js"
+  <script type='text/javascript' src='./js/cliny.functions.js'></script>
+  <script type='text/javascript' src='./js/cliny.storage.js'></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"
    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+   crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+   integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
    crossorigin="anonymous"></script>
 </head>
 <body>
+ <div id='footer-extension'></div>
  <div id='minimum'>
+ <div id='error'></div>
  <div id='query'><div id='query-content'>Loading...</div></div>
  <div id='answer'><div id='answer-content'></div></div>
- <div id='feeder'><div id='answer-src' class='feeder-icon'>{}</div><div id='answer-source'></div></div>
  <div id='q-bar'>
    <div id='q-back'>&lsaquo;</div>
    <input id='' placeholder='?'></input>
@@ -25,21 +30,38 @@
    <ul id='q-search'></ul>
    <ul id='q-filter'></ul>
  </div>
- <div id='footer'>Contribute via <a href='https://github.com/medical-newcastle/clinx'>Github</a></div>
+ <div id='footer'>
+   <div id='contribute'>Contribute via <a href='https://github.com/medical-newcastle/clinx'>Github</a></div>
+   <div id='download-notice'></div>
+   <div id='feeder'><div id='answer-src' class='feeder-icon'>{}</div><div id='answer-source'></div></div>
+   <div id='copy' onclick='clipboard()'><div id='copy-icon' class='feeder-icon'>∑</div></div>
+   <div id='copied'>Copied to clipboard!</div>
+   <div id='clear' onclick='storageClearPerms()'>⨱</div>
+ </div>
  </div>
 </body>
 <script>
  var p = $.when(1)
  var m = $.ajax({url: url})
      m.done(function(e) {
+      var z    = $('#download-notice')
+      var size = 0
+      for (var i = 0; i < e.length; i++) {
+        var t = e[i]
+        size += t.size
+      }
+      z.text('Downloading ' + round(size / 10000, 2) + ' kB across ' + e.length + ' files...')
       e.forEach(function(f, index) {
         p = p.then(function() {
+          z.text('Downloading ' + round( f.size / 10000, 2) + ' kB from ' + (index + 1) + '/' + e.length + ' files.')
           return $.ajax({url: f.download_url + '?time=' + now })
         }).then(function(g) {
           parse(g)
         })
       })
       p.then(function() {
+        z.text('Downloaded ' + round(size / 10000, 2) + ' kB across ' + e.length + ' files.')
+         .animate({opacity: 0}, 170)
         $('body').trigger('db-ready')
       })
      })
@@ -50,18 +72,10 @@
    $('#q-size').text(tdb.length)
    // Figure out categories
    categorise()
-   
+   // Update perms[] from localStorage
+   storageInitialisation()
    // Generate filters
    filterise()
-   $('#q-filter li input').change(function() {
-     var header = this.getAttribute('data')
-     if (this.checked) {
-       perms[header] = true
-     } else {
-       perms[header] = false
-     }
-   })
-   
    // Pose first question
    posit()
  })
@@ -97,7 +111,7 @@
      $('#q-search').css('display','block')
      focus()
    }).on('focusout', function() {
-     setTimeout(function() { $('#q-search').css('display','none') }, 100)
+     hideSearch()
    }).on('keyup', function(e) {
      focus()
    })

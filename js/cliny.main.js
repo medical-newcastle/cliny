@@ -22,18 +22,13 @@ timer   = null
  */
 
 posit = function(query) {
-  // State-tracking
-  if (typeof tperms == 'undefined') { tperms = clone(perms) }
-  else {
-    if (tpermissioned()) { } else {
-      tperms = clone(perms)
-      tdb = []
-      for (var i = 0; i < db.length; i++) {
-        var item = db[i]
-        for (var key in tperms) {
-          if (tperms[key] && item.cat.indexOf(key) != -1) { tdb.push(item); break }
-        }
-      }
+  // Reconcile permissions
+  tperms = clone(perms)
+  tdb    = []
+  for (var i = 0; i < db.length; i++) {
+    var item = db[i]
+    for (var key in tperms) {
+      if (tperms[key] && item.cat.indexOf(key) != -1) { tdb.push(item); break }
     }
   }
   
@@ -48,14 +43,21 @@ posit = function(query) {
       if (db[i].cat.indexOf(q) != -1) { b.push(db[i]) }
     }
   }
-  MCQ = b[Math.floor(Math.random() * b.length)]
-  $('#query-content').html(MCQ.Q)
-  $('#answer').hide()
   hideSource()
   $('#answer-src').hide()
-  $('#query').show()
+  hideFilter()
   $('#q-back').removeClass('useable')
   $('#q-size').text(tdb.length)
+  if (b.length <= 0) {
+    showError('No valid questions from selected categories.')
+    $('#answer-content').text('')
+    return
+  } else {
+    MCQ = b[Math.floor(Math.random() * b.length)]
+    $('#query-content').html(MCQ.Q)
+  }
+  $('#answer').hide()
+  $('#query').show()
 }
 
 categorise = function() {
@@ -106,16 +108,10 @@ parse = function(datum) {
 /*
   Utility
   - retrieve(id)
-  - tpermissioned()
  */
 retrieve = function(id) {
   for (var i = 0; i < db.length; i++) {
     if (db[i].uuid == id) { return db[i] }
   }
   return null
-}
-
-tpermissioned = function() {
-  for (var key in tperms) { if (tperms[key] == perms[key]) { /* Continue */ } else { return false } }
-  return true
 }
