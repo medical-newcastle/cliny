@@ -65,7 +65,7 @@ body {
 #q-filter {
   position         : absolute;
   right            :   6px;
-  top              : calc(34px + 7px);
+  top              : calc(34px + 7px + 11px);
   width            :   53.5%;
   margin-block-start  : 0;
   margin-block-end    : 0;
@@ -80,6 +80,7 @@ body {
   position         : absolute;
   display          : inline-block;
   left             : 4px;
+  width            : calc(100% - 31px);
 }
 
 #q-size {
@@ -322,6 +323,10 @@ input:focus {
   background-image : url('../raster.png');
 }
 
+#q-filter li:hover {
+  background-color : rgba(  15, 145, 255, 0.5 );
+}
+
 #answer-src {
   background-color : rgba(  55,  55,  55, 0.06 );
 }
@@ -390,6 +395,11 @@ input:focus {
 
 #q-filter li {
   font-size        :  11pt;
+  line-height      :  25px;
+}
+
+#q-filter li:hover {
+  color            : rgba( 255, 255, 255, 0.78 );
 }
 
 #q-size {
@@ -468,6 +478,7 @@ input:focus {
   display: inline-block;
   width: 30px;
   height: 17px;
+  top   : -12px;
 }
 
 /* Hide default HTML checkbox */
@@ -523,4 +534,29 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+#q-displayingLists {
+  position  : absolute;
+  top       : calc(34px + 14px);
+  width     : 315px;
+  height    : calc(100% - 34px - 14px - 37px);
+  left      : 0%;
+  overflow-y: auto;
+  list-style: none;
+  background-color : rgba(  10, 140, 240, 1);
+  background-image : url('../raster.png');
+}
+#q-displayingLists li {
+  cursor       : pointer;
+  font-family  : 'Oswald';
+  font-size    : 11pt;
+  background   : rgba( 255, 255, 255, 0.03 );
+  border-bottom: 1px solid rgba( 255, 255, 255, 0.05 );
+  border-top   : 1px solid rgba( 255, 255, 255, 0.05 );
+  margin-bottom: 0.2em;
+}
+
+#q-displayingLists li:hover {
+  color        : rgba( 215, 215, 215, 1 ); 
 }
