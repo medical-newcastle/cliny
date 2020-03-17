@@ -257,6 +257,10 @@ br {
   list-style       : none;
 }
 
+#q-filter li .selector {
+  text-align       : left;
+}
+
 input:focus {
   outline          : rgba( 145,  23,  23, 1.00 );
 }
